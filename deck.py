@@ -51,8 +51,7 @@ class PlayerDeck:
 
     def peel(self, public_deck):
         '''
-        grabs the desired number of tiles from public_deck
-        one for each player for a peel and 3 for a dump
+        grabs a tile from public_deck.pile and adds it to the player's deck
         '''
         if len(public_deck.pile) < 1:
             return None
