@@ -1,3 +1,4 @@
+import pygame
 DISTRIBUTION = {
   "A": 13,
   "B": 3,
@@ -30,7 +31,9 @@ DISTRIBUTION = {
 INITIAL_DECK_SIZE = 21
 
 
-WIDTH, HEIGHT = 600, 600
-BOARD_SIZE = 15
-TILE_SIZE = WIDTH // BOARD_SIZE
+WIDTH, HEIGHT = 800, 600
+GRID_SIZE = 15
+TILE_SIZE = 40
+RACK_SIZE = 7
 
+FONT = pygame.font.Font(None, 36)

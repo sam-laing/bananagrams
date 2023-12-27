@@ -3,45 +3,20 @@ import pygame
 import sys
 import colors 
 import resources as res
+import helpers as h
 
 class Board:
-    def __init__(self, pos):
+    def __init__(self):
         self.board = [[None for _ in range(15)] for _ in range(15)]
 
+    def draw_board(self, screen):
+        screen.fill(colors.WHITE)
 
-
-
-
-    def draw(self, scrn, ms):
-        '''
-        Draws the scrabble board along with all the tiles.
-        If tile is none, draw bonus
-        if not, draw tiles (draw tile first, then bonus)
-        If there is an active moveset, draws it as well
-        '''
-        for x in range(len(self.board)):
-            # Draw the board (bonus or bust)
-            for y in range(len(self.board[x])):
-                if self.board[x][y] is None:
-                    # Draw the bonus if there is no tile
-                    scrn.blit(res.board[self.bonus[x][y]], (x * 50, y * 50))
-                else:
-                    # Draw the tile otherwise
-                    scrn.blit(res.board[self.board[x][y]], (x * 50, y * 50))
-
-        for x, y, l in ms.m:
-            scrn.blit(res.board[l], (x * 50, y * 50))
-
-        # Draw the lines between the board
-        for i in range(15):
-            pygame.draw.aaline(scrn,
-                               colors.BLACK,
-                               (0, i * 50),
-                               (800, i * 50))
-            pygame.draw.aaline(scrn,
-                               colors.BLACK,
-                               (i * 50, 0),
-                               (i * 50, 800))
+        for row in range(h.GRID_SIZE):
+            for col in range(h.GRID_SIZE):
+                pygame.draw.rect(screen, colors.GRAY, (col * h.TILE_SIZE, row * h.TILE_SIZE, h.TILE_SIZE, h.TILE_SIZE), 1)
+                text = h.FONT.render(self.board[row][col], True, colors.BLACK)
+                screen.blit(text, (col * h.TILE_SIZE + h.TILE_SIZE // 3, row * h.TILE_SIZE + h.TILE_SIZE // 3)) 
 
     def verify_board(self):
         pass
@@ -50,7 +25,10 @@ class Board:
         pass
 
 if __name__ == "__main__":
-    print("hello")
+
+    screen = pygame.display.set_mode((h.WIDTH, h.HEIGHT))
+    b = Board()
+    b.draw_board(screen)
 
 
     
