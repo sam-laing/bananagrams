@@ -36,4 +36,5 @@ GRID_SIZE = 15
 TILE_SIZE = 40
 RACK_SIZE = 7
 
+pygame.init()
 FONT = pygame.font.Font(None, 36)

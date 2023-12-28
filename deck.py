@@ -1,5 +1,6 @@
-import helpers 
+import helpers as h
 import random
+import pygame
 
 
 class PublicDeck:
@@ -13,7 +14,7 @@ class PublicDeck:
         '''
         self.pile = []
         self.num_players = num_players
-        for letter, freq in helpers.DISTRIBUTION.items():
+        for letter, freq in h.DISTRIBUTION.items():
             self.pile.extend(list(letter * freq))
 
         random.shuffle(self.pile)
@@ -36,17 +37,10 @@ class PublicDeck:
             return grabbed
         
         
-        
 
-    
-    
-        
-
-### Review inheritance, this seems messy
-
-class PlayerDeck:
+class Player:
     def __init__(self, public_deck):
-        init_deck = public_deck.grab(helpers.INITIAL_DECK_SIZE)
+        init_deck = public_deck.grab(h.INITIAL_DECK_SIZE)
         self.deck = init_deck
 
     def peel(self, public_deck):
@@ -75,16 +69,17 @@ class PlayerDeck:
 
 
 
-pile = PublicDeck(2)
 
-print("the len is", len(pile.pile))
-deck1 = PlayerDeck(pile)
-print(len(deck1.deck))
-deck1.peel(public_deck=pile)
-print(len(deck1.deck))
-print(len(pile.pile))
-deck1.dump(deck1.deck[0], public_deck=pile)
-print(len(deck1.deck))
-print(len(pile.pile))
+if __name__ == "__main__":
+    pile = PublicDeck(2)
 
-#print(deck.deck)
+    print("the len is", len(pile.pile))
+    deck1 = Player(pile)
+    print(len(deck1.deck))
+    deck1.peel(public_deck=pile)
+    print(len(deck1.deck))
+    print(len(pile.pile))
+    deck1.dump(deck1.deck[0], public_deck=pile)
+    print(len(deck1.deck))
+    print(len(pile.pile))
+    #print(deck.deck)

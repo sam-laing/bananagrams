@@ -1,8 +1,9 @@
-
 class Tile:
-    def __init__(self, letter, x,y):
+    def __init__(self, letter, rect):
         self.letter = letter
-        self.x = x
-        self.y = y
+        self.rect = rect
+        self.dragging = False
+        self.img = None
+
 
 

@@ -7,13 +7,6 @@ import helpers
 Scrabble_Tile_Font = "Futura40"
 Tile_Size = (50, 50)
 
-fonts_config = [
-    # Used for scrabble tiles
-    ('Futura',      'FuturaExtended.ttf',       [9, 20, 40]),
-    # Used for everything else
-    ('OpenSans',    'OpenSans-Regular.ttf',     [50])
-]
-
 
 class ResourceManager:
     def __init__(self):
