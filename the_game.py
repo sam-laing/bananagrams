@@ -25,6 +25,7 @@ class Game:
         while self.running:
             self.handle_events()
             self.draw_board()
+            self.draw_player_deck()
 
             pygame.display.flip()
 
@@ -41,7 +42,7 @@ class Game:
 
     def handle_mouse_down(self, mouse_pos):
         # Check if a tile on the rack is clicked
-        for tile in self.player.deck:
+        for tile in self.player.rack:
             if tile.rect.collidepoint(mouse_pos):
                 tile.dragging = True
                 self.selected_tile = tile
@@ -54,11 +55,11 @@ class Game:
                 if self.board_class.board[row][col] != ' ' and tile_rect.collidepoint(mouse_pos):
                     # Place the selected tile back into the rack
                     letter = self.board_class.board[row][col]
-                    rect = pygame.Rect(len(self.rack) * h.TILE_SIZE, h.HEIGHT - h.TILE_SIZE, h.TILE_SIZE, h.TILE_SIZE)
-                    self.player.deck(tile.Tile(letter, rect))
-                    self.board[row][col] = ' '  # Remove the tile from the board
-                    self.selected_tile = self.rack[-1]
-                    self.selected_tile.dragging = True
+                    #rect = pygame.Rect(len(self.player.rack) * h.TILE_SIZE, h.HEIGHT - h.TILE_SIZE, h.TILE_SIZE, h.TILE_SIZE)
+                    #self.player.deck(tile.Tile(letter, rect))
+                    self.board_class.board[row][col] = ' '  # Remove the tile from the board
+                    #self.selected_tile = self.player.rack[-1]
+                    #self.selected_tile.dragging = True
                     return
 
     def handle_mouse_motion(self, mouse_pos):
@@ -71,10 +72,9 @@ class Game:
         if self.selected_tile:
             for row in range(h.GRID_SIZE):
                 for col in range(h.GRID_SIZE):
-                    if self.board[row][col] == ' ' and self.selected_tile.rect.colliderect(pygame.Rect(col * h.TILE_SIZE, row * h.TILE_SIZE, h.TILE_SIZE, h.TILE_SIZE)):
-                        self.board[row][col] = self.selected_tile.letter
+                    if self.board_class.board[row][col] == ' ' and self.selected_tile.rect.colliderect(pygame.Rect(col * h.TILE_SIZE, row * h.TILE_SIZE, h.TILE_SIZE, h.TILE_SIZE)):
+                        self.board_class.board[row][col] = self.selected_tile.letter
                         self.selected_tile.dragging = False
-                        self.rack.remove(self.selected_tile)  # Remove the tile from the rack
                         self.selected_tile = None
                         return
             # If not dropped on the board, return it to the rack
@@ -91,22 +91,13 @@ class Game:
                 text = FONT.render(self.board_class.board[row][col], True, colors.BLACK)
                 self.screen.blit(text, (col * h.TILE_SIZE + h.TILE_SIZE // 3, row * h.TILE_SIZE + h.TILE_SIZE // 3))
 
+    def draw_player_deck(self):
+        for tile in self.player.rack:
+            pygame.draw.rect(self.screen, colors.GRAY, tile.rect, 1)
+            text = FONT.render(tile.letter, True, colors.BLACK)
+            self.screen.blit(text, (tile.rect.x + h.TILE_SIZE // 3 , tile.rect.y + h.TILE_SIZE // 6))
 
 
-    def draw_rack(self):
-        for i, tile in enumerate(self.rack):
-            pygame.draw.rect(self.screen, GRAY, tile.rect, 1)
-            text = FONT.render(tile.letter, True, BLACK)
-            self.screen.blit(text, (tile.rect.x + TILE_SIZE // 3 , tile.rect.y + TILE_SIZE // 6))
-
-    def draw_tiles(self):
-        
-        # Simulate drawing tiles from a bag (you may replace this with your own logic)
-        rack = []
-        for i, letter in enumerate(self.player.deck):
-            rect = pygame.Rect(i * h.TILE_SIZE, h.HEIGHT - h.TILE_SIZE, h.TILE_SIZE, h.TILE_SIZE)
-            rack.append(Tile(letter, rect))
-        return rack
 
 
 

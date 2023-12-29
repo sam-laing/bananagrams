@@ -9,7 +9,7 @@ import helpers as h
 #FONT = pygame.font.Font(None, 36)
 class BoardClass:
     def __init__(self):
-        self.board = [[None for _ in range(15)] for _ in range(15)]
+        self.board = [[" " for _ in range(h.GRID_SIZE)] for _ in range(h.GRID_SIZE)]
 
 
     def verify_board(self):

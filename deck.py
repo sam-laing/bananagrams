@@ -1,6 +1,7 @@
 import helpers as h
 import random
 import pygame
+from tile import Tile
 
 
 class PublicDeck:
@@ -35,13 +36,12 @@ class PublicDeck:
             grabbed = self.pile[-num:]
             del self.pile[-num:]
             return grabbed
-        
-        
 
 class Player:
     def __init__(self, public_deck):
         init_deck = public_deck.grab(h.INITIAL_DECK_SIZE)
         self.deck = init_deck
+        self.add_tile_sprites()
 
     def peel(self, public_deck):
         '''
@@ -51,7 +51,10 @@ class Player:
             return None
         else:
             ret = public_deck.pile[-1]
+            del public_deck.pile[-1]
             self.deck.append(ret)
+
+            self.add_tile_sprites()
 
     def dump(self, tile, public_deck):
         '''
@@ -59,12 +62,24 @@ class Player:
         reshuffle the public deck afterwards
         '''
         if len(public_deck.pile) < 3:
-            return tile
+            return None
         else:
             self.deck.remove(tile)
             ret = public_deck.grab(3)
-            self.deck.append(ret)
+            self.deck.extend(ret)
+            self.add_tile_sprites()
             random.shuffle(self.deck)
+
+    def add_tile_sprites(self):
+        '''  
+        given the player deck (as a list of strings), 
+        convert each letter into 
+        ''' 
+        self.rack = []
+        for i, letter in enumerate(self.deck):
+            rect = pygame.Rect(i * h.TILE_SIZE, h.HEIGHT - h.TILE_SIZE, h.TILE_SIZE, h.TILE_SIZE)
+            self.rack.append(Tile(letter, rect))
+
 
 
 
@@ -75,11 +90,9 @@ if __name__ == "__main__":
 
     print("the len is", len(pile.pile))
     deck1 = Player(pile)
-    print(len(deck1.deck))
-    deck1.peel(public_deck=pile)
-    print(len(deck1.deck))
-    print(len(pile.pile))
-    deck1.dump(deck1.deck[0], public_deck=pile)
-    print(len(deck1.deck))
-    print(len(pile.pile))
+    for i in range(10):
+        print(len(deck1.deck) + len(pile.pile))
+        deck1.peel(pile)
+        print(len(deck1.deck) + len(pile.pile))
+
     #print(deck.deck)
