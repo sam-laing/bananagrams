@@ -46,7 +46,6 @@ class Player:
         
         self.public_deck = public_deck     
         self.deck = init_deck
-        self.board_tiles = {}
         self.add_tile_sprites()
 
     def peel(self):
@@ -62,16 +61,16 @@ class Player:
 
             self.add_tile_sprites()
 
-    def dump(self, tile):
+    def dump(self, tile, public_deck):
         '''
         exchange current tile for 3 new tiles
         reshuffle the public deck afterwards
         '''
-        if len(self.public_deck.pile) < 3:
+        if len(public_deck.pile) < 3:
             return None
         else:
             self.deck.remove(tile)
-            ret = self.public_deck.grab(3)
+            ret = public_deck.grab(3)
             self.deck.extend(ret)
             self.add_tile_sprites()
             random.shuffle(self.deck)

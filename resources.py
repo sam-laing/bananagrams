@@ -30,10 +30,4 @@ class ResourceManager:
 
         pass
 
-    def init_fonts(self):
-        '''
-        loads fonts into memory 
-        '''
-        for key, file, sizes in fonts_config:
-            for size in sizes:
-                self.fonts[key + str(size)] = pygame.font.Font("./res/fonts/" + file, size)
+ 

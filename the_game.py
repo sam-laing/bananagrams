@@ -23,21 +23,18 @@ class Game:
         # add a button to dump
         
         # adding a peel button 
-        self.peel_button_x_pos = 650
-        self.peel_button_y_pos = 50
-        self.peel_button_width = 100
-        self.peel_button_height = 50
+        self.peel_button_x_pos = 17 * h.TILE_SIZE 
+        self.peel_button_y_pos = 17 * h.TILE_SIZE
+        self.peel_button_width = h.WIDTH - self.peel_button_x_pos
+        self.peel_button_height = (h.HEIGHT - self.peel_button_y_pos) / 2
 
         # adding a dump button
-        self.dump_button_x_pos = 650
-        self.dump_button_y_pos = 150
-        self.dump_button_width = 100
-        self.dump_button_height = 50
-
-
+        self.dump_button_x_pos = h.GRID_SIZE * h.TILE_SIZE
+        self.dump_button_y_pos = h.GRID_SIZE * h.TILE_SIZE + self.peel_button_height
+        self.dump_button_width = h.WIDTH - self.dump_button_x_pos
+        self.dump_button_height = (h.HEIGHT - self.peel_button_y_pos) / 2
 
         self.running = True
-
         while self.running:
             self.handle_events()
             self.draw_board()
@@ -63,9 +60,14 @@ class Game:
         # Check if a tile on the rack is clicked
         for tile in self.player.rack:
             if tile.rect.collidepoint(mouse_pos):
-                tile.dragging = True
-                self.selected_tile = tile
+                tile.dragging = not tile.dragging
+                if tile.dragging:
+                    self.selected_tile = tile
+                else:
+                    self.selected_tile = None
                 return
+
+
 
         # Check if a tile on the board is clicked
         for row in range(h.GRID_SIZE):
@@ -75,14 +77,13 @@ class Game:
                     # Place the selected tile back into the rack
                     letter = self.board_class.board[row][col]
                     rect = pygame.Rect(len(self.player.rack) * h.TILE_SIZE, h.HEIGHT - h.TILE_SIZE, h.TILE_SIZE, h.TILE_SIZE)
-                    self.player.deck.append(Tile(letter, rect))
+                    self.selected_tile = Tile(letter, rect, dragging = True)
+                    self.player.deck.append(self.selected_tile.letter)
                     self.board_class.board[row][col] = ' '  # Remove the tile from the board
-                    #self.selected_tile = self.player.rack[-1]
-                    self.selected_tile.dragging = True
                     return
         
         if pygame.Rect(self.peel_button_x_pos, self.peel_button_y_pos, self.peel_button_width, self.peel_button_height).collidepoint(mouse_pos):
-            self.player.peel(self.public_deck)
+            self.player.peel()
             print(f"number of tiles in the deck: {len(self.player.rack)}")
             return
         
@@ -114,20 +115,30 @@ class Game:
     def draw_peel_button(self):
         pygame.draw.rect(
             self.screen, colors.GREEN, 
-            pygame.rect.Rect(self.peel_button_x_pos, self.peel_button_y_pos, 100, 50)
+            pygame.rect.Rect(
+                self.peel_button_x_pos, self.peel_button_y_pos, 
+                self.peel_button_width, self.peel_button_height
+            )
         )
-
         text = FONT.render("PEEL!", True, colors.BLACK)
         self.screen.blit(text, (self.peel_button_x_pos + 10, self.peel_button_y_pos + 10))
     
     def draw_dump_button(self):
         pygame.draw.rect(
             self.screen, colors.RED, 
-            pygame.rect.Rect(self.dump_button_x_pos, self.dump_button_y_pos, 100, 50)
+            pygame.rect.Rect(self.dump_button_x_pos, self.dump_button_y_pos, 
+                             self.dump_button_width, self.dump_button_height
+            )
         )
 
         text = FONT.render("DUMP!", True, colors.BLACK)
         self.screen.blit(text, (self.dump_button_x_pos + 10, self.dump_button_y_pos + 10))
+
+    def draw_player_deck(self):
+        for i, tile in enumerate(self.player.rack):
+            pygame.draw.rect(self.screen, colors.GRAY, tile.rect, 1)
+            text = FONT.render(tile.letter, True, colors.BLACK)
+            self.screen.blit(text, (tile.rect.x + h.TILE_SIZE // 3 , tile.rect.y + h.TILE_SIZE // 6))
 
     def draw_board(self):
         self.screen.fill(colors.WHITE)
@@ -137,15 +148,6 @@ class Game:
                 pygame.draw.rect(self.screen, colors.GRAY, (col * h.TILE_SIZE, row * h.TILE_SIZE, h.TILE_SIZE, h.TILE_SIZE), 1)
                 text = FONT.render(self.board_class.board[row][col], True, colors.BLACK)
                 self.screen.blit(text, (col * h.TILE_SIZE + h.TILE_SIZE // 3, row * h.TILE_SIZE + h.TILE_SIZE // 3))
-
-    def draw_player_deck(self):
-        for i, tile in enumerate(self.player.rack):
-            pygame.draw.rect(self.screen, colors.GRAY, tile.rect, 1)
-            text = FONT.render(tile.letter, True, colors.BLACK)
-            self.screen.blit(text, (tile.rect.x + h.TILE_SIZE // 3 , tile.rect.y + h.TILE_SIZE // 6))
-
-
-
 
 
 
