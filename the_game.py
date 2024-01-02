@@ -79,6 +79,7 @@ class Game:
                     rect = pygame.Rect(len(self.player.rack) * h.TILE_SIZE, h.HEIGHT - h.TILE_SIZE, h.TILE_SIZE, h.TILE_SIZE)
                     self.selected_tile = Tile(letter, rect, dragging = True)
                     self.player.deck.append(self.selected_tile.letter)
+                    self.player.add_tile_sprites()
                     self.board_class.board[row][col] = ' '  # Remove the tile from the board
                     return
         
