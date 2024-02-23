@@ -83,9 +83,9 @@ class Player:
         ''' 
         self.rack = []
         for i, letter in enumerate(self.deck):
-            if i%12 == 0:
-                rect = pygame.Rect((i % 12) * h.TILE_SIZE, (h.HEIGHT - 3 * h.TILE_SIZE) - (1 + i // 12) * h.TILE_SIZE, h.TILE_SIZE,  h.TILE_SIZE)
-                self.rack.append(Tile(letter, rect))
+            rect = pygame.Rect((i % 12) * h.TILE_SIZE, h.HEIGHT - 3 * h.TILE_SIZE, h.TILE_SIZE,  h.TILE_SIZE)
+            #rect = pygame.Rect(i * h.TILE_SIZE, (h.HEIGHT - 3 * h.TILE_SIZE) -  h.TILE_SIZE, h.TILE_SIZE,  h.TILE_SIZE)
+            self.rack.append(Tile(letter, rect))
 
 
 
